@@ -9,7 +9,7 @@ before_install:
   - sudo apt-get update
   - sudo add-apt-repository -y ppa:pi-rho/dev
   - sudo apt-get update
-  - sudo apt-get install -y tmux-next=2.3~20170701~bzr3917+20-1ubuntu1~ppa0~ubuntu12.04.1
+  - sudo apt-get install -y tmux-next
   - sudo ln -sf /usr/bin/tmux-next /usr/bin/tmux
   - gem install bundler -v 1.15.1
 
