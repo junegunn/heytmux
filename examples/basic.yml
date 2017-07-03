@@ -1,0 +1,20 @@
+---
+# List of windows as the top-level array
+
+- first window:              # Name of the window (required)
+    layout: main-vertical    # Window layout      (optional)
+    panes:                   # List of panes      (optional)
+      - sleep 1              # Pane title and command
+      - sleep 2
+      - third pane: sleep 3  # It's recommended that you explicitly name each pane
+      - fourth pane: |       # Multi-line command
+          sleep 3
+          sleep 4
+
+- second window:
+    panes:
+      - sleep 5
+      - sleep 6
+      - sleep 7
+    synchronize-panes: true  # Extra window options
+    pane-border-status: top

@@ -1,0 +1,43 @@
+---
+# Root layout
+layout: tiled
+
+# Root window options
+synchronize-panes: true
+pane-border-status: bottom
+
+# List of windows
+windows:
+  # Name only, no panes
+  - empty, named window
+
+  - primary window:            # Name of the window
+      layout: main-vertical    # Window layout, overrides root layout
+      panes:                   # List of panes
+        - sleep 1              # Pane title and command
+        - sleep 2
+        - third pane: sleep 3  # It's recommended that you explicitly name each pane
+        - fourth pane: |       # Multi-line command
+            sleep 3
+            sleep 4
+
+  - secondary window:
+      # "items" is for expanding pane specification
+      items: [5, 6, 7]
+      panes:
+        # Pane specs with {{item}} in their titles will be expanded according
+        # to items list.
+        - sleep {{item}}
+        - pane {{item}}: echo {{item}}
+
+      # Overrides common window options
+      synchronize-panes: false
+      pane-border-status: top
+
+  # Duplicate names and titles are okay as long as you don't reorder
+  # windows and panes of the same names.
+  - secondary window:
+      layout: even-horizontal
+      panes:
+        - ls: ls
+        - ls: ls -al           # Duplicate pane titles are also allowed

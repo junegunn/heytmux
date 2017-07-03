@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+
+require 'heytmux'
+
+if ARGV.include?('--version')
+  puts Heytmux::VERSION
+  exit
+end
+
+focus = ARGV.delete('-d').nil?
+kill = ARGV.delete('--kill')
+abort 'usage: heytmux [-d] [--kill] YAML_SPECS...' if ARGV.empty? && $stdin.tty?
+abort 'Not on tmux' unless ENV['TMUX']
+
+if (unreadable = ARGV.find { |f| !File.readable?(f) })
+  abort "Cannot read #{unreadable}"
+end
+
+require 'yaml'
+strings = [$stdin.tty? ? nil : ['standard input', $stdin.read],
+           *ARGV.map { |f| [f, File.read(f)] }].compact
+specs = strings.map do |name, str|
+  begin
+    str = Heytmux.replace_env_vars(str)
+    YAML.respond_to?(:safe_load) ? YAML.safe_load(str) : YAML.load(str)
+  rescue => e
+    abort("Failed to parse #{name}: #{e}")
+  end
+end
+
+begin
+  specs.each do |s|
+    Heytmux::Validations.validate(s)
+  end
+rescue ArgumentError, RegexpError => e
+  abort(e.message)
+end
+
+if kill
+  specs.each { |spec| Heytmux.kill! spec }
+else
+  specs.each { |spec| Heytmux.process! spec, focus }
+end
