@@ -1,6 +1,8 @@
 Hey tmux!
 =========
 
+[![travis-ci](https://travis-ci.org/junegunn/heytmux.svg?branch=master)](https://travis-ci.org/junegunn/heytmux) [![Coverage Status](https://coveralls.io/repos/github/junegunn/heytmux/badge.svg?branch=master)](https://coveralls.io/github/junegunn/heytmux?branch=master)
+
 Tmux scripting made easy.
 
 Installation
