@@ -254,7 +254,7 @@ following example will not work as expected.
 ```
 
 With `expect` construct, you can make Heytmux wait until a certain regular
-expression pattern appears on the the pane (a la [Expect][expect]).
+expression pattern appears on the pane (a la [Expect][expect]).
 
 [expect]: https://en.wikipedia.org/wiki/Expect
 
