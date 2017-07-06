@@ -69,30 +69,15 @@ module Heytmux
     end
   end
 
+  # Finds appropriate PaneActions for the commands and processes them
   def process_command!(window_index, pane)
     pane_index, item, commands = pane.values_at(:index, :item, :command)
-    [*commands].each do |command|
-      case command
-      when Hash
-        _action, regex = command.first
-        regex = Regexp.compile(regex.to_s)
-        wait_until do
-          content = Tmux.capture(window_index, pane_index)
-          content =~ regex
-        end
-      else
-        command = command.gsub(ITEM_PAT, item) if item
-        Tmux.paste(window_index, pane_index, command)
+    [*commands].compact.each do |command|
+      label, body = command.is_a?(Hash) ? command.first : [:paste, command]
+      PaneAction.for(label).process(window_index, pane_index, body) do |source|
+        string = source.to_s
+        item ? string.gsub(ITEM_PAT, item) : string
       end
-    end
-  end
-
-  def wait_until
-    timeout = Time.now + EXPECT_TIMEOUT
-    loop do
-      sleep EXPECT_SLEEP_INTERVAL
-      return if yield
-      raise 'Timed out' if Time.now > timeout
     end
   end
 

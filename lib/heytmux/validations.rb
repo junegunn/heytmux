@@ -65,27 +65,26 @@ module Heytmux
     # - command_string
     # - [command_strings_or_hashes...]
     def validate_commands(commands)
-      return if commands.is_a?(String)
       message = "Invalid command: #{commands.inspect}"
       case commands
       when Array
-        hashes, strings = commands.partition { |command| command.is_a?(Hash) }
-        hashes.each do |command|
-          raise ArgumentError, message unless single_spec?(command)
-          action, condition = command.first
-          unless SUPPORTED_ACTIONS.include?(action)
-            raise ArgumentError, "Unsupported action: #{action}"
-          end
-          raise ArgumentError, message unless valid_name?(condition)
-          Regexp.compile(condition.to_s)
-        end
-        strings.each do |command|
-          raise ArgumentError, message unless valid_name?(command)
-        end
+        commands.reject { |c| c.to_s.empty? }
+                .each { |command| validate_commands(command) }
+      when Hash
+        raise ArgumentError, message unless single_spec?(commands)
+        label, body = commands.first
+        validate_action(label, body)
       else
-        raise ArgumentError, message unless valid_name?(commands)
+        raise ArgumentError, message unless valid_string?(commands)
       end
       nil
+    end
+
+    # Checks if the action is currently supported
+    def validate_action(label, body)
+      action = PaneAction.for(label)
+      raise ArgumentError, "Unsupported action: #{label}" unless action
+      action.validate(body)
     end
 
     # Checks if the given hash only contains one mapping from a string to
@@ -97,8 +96,13 @@ module Heytmux
     end
     private_class_method :single_spec?
 
+    def valid_string?(value)
+      !(value.is_a?(Array) || value.is_a?(Hash))
+    end
+    private_class_method :valid_string?
+
     def valid_name?(value)
-      !(value.nil? || value.is_a?(Array) || value.to_s.empty?)
+      valid_string?(value) && !value.to_s.empty?
     end
     private_class_method :valid_name?
   end
