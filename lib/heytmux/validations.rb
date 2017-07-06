@@ -94,16 +94,13 @@ module Heytmux
       second.nil? && !key.to_s.empty? &&
         (klasses.empty? || klasses.any? { |k| value.is_a?(k) })
     end
-    private_class_method :single_spec?
 
     def valid_string?(value)
       !(value.is_a?(Array) || value.is_a?(Hash))
     end
-    private_class_method :valid_string?
 
     def valid_name?(value)
       valid_string?(value) && !value.to_s.empty?
     end
-    private_class_method :valid_name?
   end
 end

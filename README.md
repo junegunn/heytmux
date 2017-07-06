@@ -269,6 +269,23 @@ expression pattern appears on the pane (a la [Expect][expect]).
     - uptime
 ```
 
+#### Special commands
+
+In addition to `expect`, Heytmux also supports `sleep` and `keys` commands.
+`sleep` suspends the execution for a given time period. It's useful when the
+shell on the target pane is non-interactive so you can't send `sleep` command
+to it. `keys` command is for sending special keys, such as `c-c` (CTRL-C)
+using `tmux send-keys` command. To send multiple keys, specify the keys as
+a YAML list (e.g. `[c-c, c-l]`).
+
+```yaml
+- servers:
+  - server 1:
+    - vmstat 2 | tee log
+    - sleep: 3
+    - keys: c-c
+```
+
 Vim plugin
 ----------
 
