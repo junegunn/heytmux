@@ -13,8 +13,6 @@ module Heytmux
     'pane-border-format' => '#{pane_title}'
   }.freeze
 
-  SUPPORTED_ACTIONS = %w[expect].to_set.freeze
-
   WINDOWS_KEY = 'windows'
   LAYOUT_KEY = 'layout'
   PANES_KEY = 'panes'
@@ -28,5 +26,8 @@ end
 
 require 'heytmux/version'
 require 'heytmux/validations'
+require 'heytmux/pane_action'
+require 'heytmux/pane_actions/paste'
+require 'heytmux/pane_actions/expect'
 require 'heytmux/tmux'
 require 'heytmux/core'
