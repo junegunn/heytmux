@@ -66,16 +66,16 @@ module Heytmux
     # - [command_strings_or_hashes...]
     def validate_commands(commands)
       message = "Invalid command: #{commands.inspect}"
-      case commands
-      when Array
-        commands.reject { |c| c.to_s.empty? }
-                .each { |command| validate_commands(command) }
-      when Hash
-        raise ArgumentError, message unless single_spec?(commands)
-        label, body = commands.first
-        validate_action(label, body)
-      else
-        raise ArgumentError, message unless valid_string?(commands)
+      commands = commands.is_a?(Array) ? commands : [commands]
+      commands.each do |command|
+        case command
+        when Hash
+          raise ArgumentError, message unless single_spec?(command)
+          label, body = command.first
+          validate_action(label, body)
+        else
+          raise ArgumentError, message unless valid_string?(command)
+        end
       end
       nil
     end

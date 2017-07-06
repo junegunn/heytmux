@@ -52,7 +52,7 @@ class HeytmuxValidationsTest < HeytmuxTestBase
      ['foo', 'bar', 'expect' => 'pattern']].each do |spec|
       assert_nil Heytmux::Validations.validate_commands(spec)
     end
-    [['not expected' => 'pattern']].each do |spec|
+    [[[]], ['not expected' => 'pattern']].each do |spec|
       assert_raises(ArgumentError) do
         Heytmux::Validations.validate_commands(spec)
       end
