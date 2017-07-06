@@ -6,7 +6,7 @@ class HeytmuxValidationsTest < HeytmuxTestBase
     [1, '1', :foo, {},
      { 'windows' => 'foo' },
      { 'windows' => nil }].each do |spec|
-       assert_raises(ArgumentError) { Heytmux::Validations.validate(spec) }
+      assert_raises(ArgumentError) { Heytmux::Validations.validate(spec) }
     end
 
     assert_nil Heytmux::Validations.validate('windows' => [])
@@ -29,8 +29,7 @@ class HeytmuxValidationsTest < HeytmuxTestBase
      { 'foo' => [] },
      { 'foo' => {} },
      { 'foo' => ['pane1', { 'pane2' => 'command' }] },
-     { 'foo' => [{ 'pane2' => [{ 'expect' => 'pattern' }] }] },
-    ].each do |spec|
+     { 'foo' => [{ 'pane2' => [{ 'expect' => 'pattern' }] }] }].each do |spec|
       assert_nil Heytmux::Validations.validate_window(spec)
     end
   end
@@ -43,14 +42,14 @@ class HeytmuxValidationsTest < HeytmuxTestBase
     end
     ['foo',
      { 'foo' => 'bar' },
-     { 'foo' => [1, 2, 3] }
-    ].each do |spec|
+     { 'foo' => [1, 2, 3] }].each do |spec|
       assert_nil Heytmux::Validations.validate_pane(spec)
     end
   end
 
   def test_validate_command
-    [nil, [nil], '', 'foo', ['foo', 'bar', 'expect' => 'pattern']].each do |spec|
+    [nil, [nil], '', 'foo',
+     ['foo', 'bar', 'expect' => 'pattern']].each do |spec|
       assert_nil Heytmux::Validations.validate_commands(spec)
     end
     [['not expected' => 'pattern']].each do |spec|
@@ -77,11 +76,9 @@ class HeytmuxTest < HeytmuxTestBase
   end
 
   def test_stateful_indexer
-    entities = [
-      { index: 1, title: 'foo' },
-      { index: 2, title: 'bar' },
-      { index: 3, title: 'foo' }
-    ]
+    entities = [{ index: 1, title: 'foo' },
+                { index: 2, title: 'bar' },
+                { index: 3, title: 'foo' }]
     indexer = Heytmux.send(:indexer, entities, :title, :index)
     assert_equal 1, indexer['foo']
     assert_equal 3, indexer['foo']
@@ -116,11 +113,9 @@ class HeytmuxTest < HeytmuxTestBase
   end
 
   def test_create_if_missing
-    entities = [
-      { index: nil, title: 'foo' },
-      { index: 1, title: 'bar' },
-      { index: nil, title: 'baz' }
-    ]
+    entities = [{ index: nil, title: 'foo' },
+                { index: 1, title: 'bar' },
+                { index: nil, title: 'baz' }]
     new_index = 100
     found, created = Heytmux.send(:create_if_missing, entities, :index) do |e|
       e.merge(index: new_index)
