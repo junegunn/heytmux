@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'english'
+
 module Heytmux
   module PaneActions
     # Pastes the command onto the pane
@@ -14,6 +16,7 @@ module Heytmux
         regex = Regexp.compile(yield(body))
         wait_until do
           content = Tmux.capture(window_index, pane_index)
+          raise 'Failed to capture pane content' unless $CHILD_STATUS.success?
           content =~ regex
         end
       end
