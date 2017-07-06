@@ -27,7 +27,9 @@ Plug 'junegunn/heytmux'
 ```
 
 - Registers `:Heytmux` command
-- No need to install Gem
+- No need to install Gem if you only use Heytmux inside Vim
+    - But if you want it to be globally available,
+      `Plug 'junegunn/heytmux', { 'do': 'gem install heytmux' }`
 
 Usage
 -----
