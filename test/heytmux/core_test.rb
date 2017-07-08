@@ -5,12 +5,20 @@ class HeytmuxCoreTest < HeytmuxTestBase
     refute_nil ::Heytmux::VERSION
   end
 
+  def test_replace_env_vars
+    ENV['A'] = 'foo'
+    ENV.delete 'B'
+    assert_equal 'foo / bar',
+                 Heytmux.replace_env_vars('{{ $A }} / {{ $B | bar }}')
+    assert_raises(ArgumentError) do
+      Heytmux.replace_env_vars('{{ $A }} / {{ $B }}')
+    end
+  end
+
   def test_stateful_indexer
-    entities = [
-      { index: 1, title: 'foo' },
-      { index: 2, title: 'bar' },
-      { index: 3, title: 'foo' }
-    ]
+    entities = [{ index: 1, title: 'foo' },
+                { index: 2, title: 'bar' },
+                { index: 3, title: 'foo' }]
     indexer = Heytmux.send(:indexer, entities, :title, :index)
     assert_equal 1, indexer['foo']
     assert_equal 3, indexer['foo']
@@ -45,11 +53,9 @@ class HeytmuxCoreTest < HeytmuxTestBase
   end
 
   def test_create_if_missing
-    entities = [
-      { index: nil, title: 'foo' },
-      { index: 1, title: 'bar' },
-      { index: nil, title: 'baz' }
-    ]
+    entities = [{ index: nil, title: 'foo' },
+                { index: 1, title: 'bar' },
+                { index: nil, title: 'baz' }]
     new_index = 100
     found, created = Heytmux.send(:create_if_missing, entities, :index) do |e|
       e.merge(index: new_index)
