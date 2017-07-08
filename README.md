@@ -221,6 +221,8 @@ expanded according to the list.
       - pane {{item}}: sleep {{item}}
 ```
 
+Note that you have to quote a pane title if it starts with `{{ item }}`.
+
 This is often useful when you have to work with a series of log files or with
 a set of servers.
 

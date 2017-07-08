@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'English'
 
 class HeytmuxValidationsTest < HeytmuxTestBase
   def test_validate
@@ -31,6 +32,17 @@ class HeytmuxValidationsTest < HeytmuxTestBase
      { 'foo' => ['pane1', { 'pane2' => 'command' }] },
      { 'foo' => [{ 'pane2' => [{ 'expect' => 'pattern' }] }] }].each do |spec|
       assert_nil Heytmux::Validations.validate_window(spec)
+    end
+  end
+
+  def test_yaml_without_proper_quoting
+    loaded = YAML.safe_load(['- window 1:',
+                             '    items: [pane 1, pane 2]',
+                             '    panes:',
+                             '      - {{item}}:',
+                             '      - {{item}}'].join($RS))
+    assert_raises(ArgumentError) do
+      Heytmux::Validations.validate_window(loaded.first)
     end
   end
 

@@ -55,7 +55,13 @@ module Heytmux
       message = "Not a valid pane spec: #{pane_spec.inspect}"
       case pane_spec
       when Hash
-        raise ArgumentError, message unless single_spec?(pane_spec)
+        unless single_spec?(pane_spec)
+          if unquoted_pane_title?(pane_spec)
+            message = 'Invalid pane title. ' \
+              'Make sure to quote pane titles that start with {{ item }}.'
+          end
+          raise ArgumentError, message
+        end
         validate_commands(pane_spec.first.last)
       else
         raise ArgumentError, message unless valid_name?(pane_spec)
@@ -87,11 +93,11 @@ module Heytmux
       action.validate(body)
     end
 
-    # Checks if the given hash only contains one mapping from a string to
-    # a hash
+    # Checks if the given hash only contains one mapping from a non-empty
+    # string to a hash
     def single_spec?(spec, *klasses)
       (key, value), second = spec.take(2)
-      second.nil? && !key.to_s.empty? &&
+      second.nil? && valid_name?(key) &&
         (klasses.empty? || klasses.any? { |k| value.is_a?(k) })
     end
 
@@ -101,6 +107,10 @@ module Heytmux
 
     def valid_name?(value)
       valid_string?(value) && !value.to_s.empty?
+    end
+
+    def unquoted_pane_title?(pane_spec)
+      pane_spec.inspect.include?('{{"item"')
     end
   end
 end
