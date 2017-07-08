@@ -36,11 +36,11 @@ class HeytmuxValidationsTest < HeytmuxTestBase
   end
 
   def test_yaml_without_proper_quoting
-    loaded = YAML.safe_load(['- window 1:',
-                             '    items: [pane 1, pane 2]',
-                             '    panes:',
-                             '      - {{item}}:',
-                             '      - {{item}}'].join($RS))
+    loaded = YAML.load(['- window 1:',
+                        '    items: [pane 1, pane 2]',
+                        '    panes:',
+                        '      - {{item}}:',
+                        '      - {{item}}'].join($RS))
     assert_raises(ArgumentError) do
       Heytmux::Validations.validate_window(loaded.first)
     end
