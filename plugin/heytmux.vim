@@ -39,7 +39,7 @@ function! s:heytmux(args, focus, count, line1, line2)
     let args = tempname()
     call writefile(getline(a:line1, a:line2), args)
   endif
-  let command = printf('ruby -I%s %s %s %s < /dev/tty',
+  let command = printf('ruby -I%s %s %s %s',
         \ s:lib, s:bin, (a:focus ? '' : '-d ').opts, args)
   let out = system(command)
   if v:shell_error

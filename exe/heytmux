@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'heytmux'
 
@@ -17,13 +18,13 @@ if (unreadable = ARGV.find { |f| !File.readable?(f) })
 end
 
 require 'yaml'
-strings = [$stdin.tty? ? nil : ['standard input', $stdin.read],
+strings = [ARGV.any? || $stdin.tty? ? nil : ['standard input', $stdin.read],
            *ARGV.map { |f| [f, File.read(f)] }].compact
 specs = strings.map do |name, str|
   begin
     str = Heytmux.replace_env_vars(str)
     YAML.respond_to?(:safe_load) ? YAML.safe_load(str) : YAML.load(str)
-  rescue => e
+  rescue StandardError => e
     abort("Failed to parse #{name}: #{e}")
   end
 end
