@@ -221,7 +221,7 @@ expanded according to the list.
       - pane {{item}}: sleep {{item}}
 ```
 
-Note that you have to quote a pane title if it starts with `{{ item }}`.
+Note that you have to quote a pane title if it starts with `{{`.
 
 This is often useful when you have to work with a series of log files or with
 a set of servers.
@@ -238,6 +238,7 @@ a set of servers.
       - ssh user@{{item}} tail -f /var/log/server-{{item}}.log
 ```
 
+Also note that `{{ item.index }}` expands to zero-based index of the item.
 
 #### Referring to environment variables
 

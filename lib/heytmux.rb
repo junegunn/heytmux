@@ -18,6 +18,7 @@ module Heytmux
   PANES_KEY = 'panes'
   ITEMS_KEY = 'items'
   ITEM_PAT = /{{ *item *}}/i
+  ITEM_INDEX_PAT = /{{ *item\.index *}}/i
   ENV_PAT = /{{ *\$([a-z0-9_]+) *(?:\| *(.*?) *)?}}/i
 
   EXPECT_SLEEP_INTERVAL = 0.5

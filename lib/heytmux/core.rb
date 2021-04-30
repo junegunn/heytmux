@@ -71,12 +71,13 @@ module Heytmux
 
   # Finds appropriate PaneActions for the commands and processes them
   def process_command!(window_index, pane)
-    pane_index, item, commands = pane.values_at(:index, :item, :command)
+    pane_index, item, item_index, commands =
+      pane.values_at(:index, :item, :item_index, :command)
     [*commands].compact.each do |command|
       label, body = command.is_a?(Hash) ? command.first : [:paste, command]
       PaneAction.for(label).process(window_index, pane_index, body) do |source|
         string = source.to_s
-        item ? string.gsub(ITEM_PAT, item) : string
+        item ? string.gsub(ITEM_PAT, item).gsub(ITEM_INDEX_PAT, item_index.to_s) : string
       end
     end
   end
@@ -141,11 +142,12 @@ module Heytmux
 
   def interpret_and_expand_pane_spec(pane, items, pane_indexer)
     title, command = pane.is_a?(Hash) ? pane.first : [pane.tr("\n", ' '), pane]
-    if title =~ ITEM_PAT
-      items.map do |item|
-        title_sub = title.gsub(ITEM_PAT, item.to_s)
+    if title =~ ITEM_PAT || title =~ ITEM_INDEX_PAT
+      items.map.with_index do |item, item_idx|
+        title_sub = title.gsub(ITEM_PAT, item.to_s).gsub(ITEM_INDEX_PAT, item_idx.to_s)
         { title: title_sub, command: command,
-          item: item.to_s, index: pane_indexer[title_sub] }
+          item: item.to_s, item_index: item_idx,
+          index: pane_indexer[title_sub] }
       end
     else
       [{ title: title, command: command, index: pane_indexer[title] }]

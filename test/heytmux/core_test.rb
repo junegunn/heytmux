@@ -43,11 +43,11 @@ class HeytmuxCoreTest < HeytmuxTestBase
     indexer = ->(title) { indexes[title].shift }
     result = Heytmux.interpret_and_expand_pane_spec(pane, items, indexer)
     assert_equal(
-      [{ title: 'pane-foo', item: 'foo', command: command, index: 10 },
-       { title: 'pane-bar', item: 'bar', command: command, index: 20 },
-       { title: 'pane-baz', item: 'baz', command: command, index: nil },
-       { title: 'pane-bar', item: 'bar', command: command, index: 30 },
-       { title: 'pane-bar', item: 'bar', command: command, index: nil }],
+      [{ title: 'pane-foo', item: 'foo', item_index: 0, command: command, index: 10 },
+       { title: 'pane-bar', item: 'bar', item_index: 1, command: command, index: 20 },
+       { title: 'pane-baz', item: 'baz', item_index: 2, command: command, index: nil },
+       { title: 'pane-bar', item: 'bar', item_index: 3, command: command, index: 30 },
+       { title: 'pane-bar', item: 'bar', item_index: 4, command: command, index: nil }],
       result
     )
   end
