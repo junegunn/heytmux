@@ -1,19 +1,13 @@
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'simplecov'
+# frozen_string_literal: true
+
+$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 require 'coveralls'
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(
-  [SimpleCov::Formatter::HTMLFormatter, Coveralls::SimpleCov::Formatter]
-)
-SimpleCov.start
+Coveralls.wear!
 require 'heytmux'
 require 'minitest/autorun'
 
 class HeytmuxTestBase < Minitest::Test
   Tmux = Heytmux::Tmux
-
-  def setup
-    assert ENV['TMUX'], 'You have to be on tmux'
-  end
 
   def query(window_index, pane_index, format = '#{pane_title}')
     # XXX: It takes a little while for the pane title to change
@@ -28,6 +22,7 @@ class HeytmuxTestBase < Minitest::Test
       sleep 0.2
       actual = yield
       break if expected == actual
+
       flunk("Expected: #{expected}, actual: #{actual}") if Time.now > timeout
     end
   end

@@ -1,0 +1,30 @@
+---
+name: Test
+
+on:
+  push:
+    branches: [master, devel]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1.62.0
+        with:
+          ruby-version: 3.0.0
+
+      - name: Install packages
+        run: sudo apt-get install --yes tmux
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install gems
+        run: bundle install
+
+      - name: Run test
+        run: tmux new-session -d && bundle exec rake test
