@@ -1,7 +1,7 @@
 Hey tmux!
 =========
 
-[![travis-ci](https://travis-ci.org/junegunn/heytmux.svg?branch=master)](https://travis-ci.org/junegunn/heytmux)
+[![GitHub Actions Status](https://github.com/junegunn/heytmux/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/junegunn/heytmux/actions)
 [![Coverage Status](https://coveralls.io/repos/github/junegunn/heytmux/badge.svg?branch=master)](https://coveralls.io/github/junegunn/heytmux?branch=master)
 [![Gem](https://img.shields.io/gem/v/heytmux.svg)](https://rubygems.org/gems/heytmux)
 
