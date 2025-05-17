@@ -6,9 +6,9 @@ require 'set'
 module Heytmux
   DEFAULT_LAYOUT = ->(num_panes) { num_panes <= 3 ? 'even-vertical' : 'tiled' }
   DEFAULT_OPTIONS = {
-    'automatic-rename'   => 'off',
-    'allow-rename'       => 'off',
-    'pane-base-index'    => 0,
+    'automatic-rename' => 'off',
+    'allow-rename' => 'off',
+    'pane-base-index' => 0,
     'pane-border-status' => 'bottom',
     'pane-border-format' => '#{pane_title}'
   }.freeze

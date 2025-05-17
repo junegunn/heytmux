@@ -77,7 +77,11 @@ module Heytmux
       label, body = command.is_a?(Hash) ? command.first : [:paste, command]
       PaneAction.for(label).process(window_index, pane_index, body) do |source|
         string = source.to_s
-        item ? string.gsub(ITEM_PAT, item).gsub(ITEM_INDEX_PAT, item_index.to_s) : string
+        if item
+          string.gsub(ITEM_PAT, item).gsub(ITEM_INDEX_PAT, item_index.to_s)
+        else
+          string
+        end
       end
     end
   end
@@ -144,7 +148,8 @@ module Heytmux
     title, command = pane.is_a?(Hash) ? pane.first : [pane.tr("\n", ' '), pane]
     if title =~ ITEM_PAT || title =~ ITEM_INDEX_PAT
       items.map.with_index do |item, item_idx|
-        title_sub = title.gsub(ITEM_PAT, item.to_s).gsub(ITEM_INDEX_PAT, item_idx.to_s)
+        title_sub = title.gsub(ITEM_PAT, item.to_s)
+                         .gsub(ITEM_INDEX_PAT, item_idx.to_s)
         { title: title_sub, command: command,
           item: item.to_s, item_index: item_idx,
           index: pane_indexer[title_sub] }
@@ -156,9 +161,9 @@ module Heytmux
 
   # Checks if there are entities without the required_field and creates them
   # with the given block. Returns two arrays of found and created entities.
-  def create_if_missing(entities, required_field)
+  def create_if_missing(entities, required_field, &block)
     found, missing = entities.partition { |e| e[required_field] }
-    [found, missing.map { |e| yield e }]
+    [found, missing.map(&block)]
   end
   private_class_method :create_if_missing
 

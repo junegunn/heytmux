@@ -12,15 +12,15 @@ module Heytmux
                   unless spec.key?(WINDOWS_KEY)
                     raise(ArgumentError, 'windows key is not found')
                   end
+
                   spec[WINDOWS_KEY]
                 when Array then spec
                 else
                   raise ArgumentError, "Not a valid spec: #{spec}"
                 end
 
-      unless windows.is_a?(Array)
-        raise ArgumentError, 'windows must be given as a list'
-      end
+      raise ArgumentError, 'windows must be given as a list' unless windows.is_a?(Array)
+
       windows.each { |window| validate_window(window) }
       nil
     end
@@ -33,9 +33,8 @@ module Heytmux
       message = "Not a valid window spec: #{window_spec.inspect}"
       case window_spec
       when Hash
-        unless single_spec?(window_spec, Hash, Array)
-          raise ArgumentError, message
-        end
+        raise ArgumentError, message unless single_spec?(window_spec, Hash, Array)
+
         spec = window_spec.first.last
         spec = { PANES_KEY => spec } if spec.is_a?(Array)
         spec.fetch(PANES_KEY, []).each do |pane|
@@ -77,6 +76,7 @@ module Heytmux
         case command
         when Hash
           raise ArgumentError, message unless single_spec?(command)
+
           label, body = command.first
           validate_action(label, body)
         else
@@ -90,6 +90,7 @@ module Heytmux
     def validate_action(label, body)
       action = PaneAction.for(label)
       raise ArgumentError, "Unsupported action: #{label}" unless action
+
       action.validate(body)
     end
 

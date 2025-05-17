@@ -17,6 +17,7 @@ module Heytmux
         wait_until do
           content = Tmux.capture(window_index, pane_index)
           raise 'Failed to capture pane content' unless $CHILD_STATUS.success?
+
           content =~ regex
         end
       end

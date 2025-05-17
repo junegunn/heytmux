@@ -23,7 +23,7 @@ module Heytmux
                                           'pane-base-index' => pane_index)
         assert(matcher.call.any?)
 
-        Keys.new.process(window_index, pane_index, ['c-c', 'exit', 'enter'])
+        Keys.new.process(window_index, pane_index, %w[c-c exit enter])
         assert_retries([]) { matcher.call }
       end
     end

@@ -96,7 +96,7 @@ class HeytmuxCoreTest < HeytmuxTestBase
     spec = {
       'windows' => [
         'foo',
-        { 'foo' => { 'panes' => ['foo2-1', 'foo2-3'], 'opt' => 'optval' } },
+        { 'foo' => { 'panes' => %w[foo2-1 foo2-3], 'opt' => 'optval' } },
         { 'bar' => { 'panes' => ['bar-1'], 'layout' => 'tiled' } },
         { 'foo' => { 'panes' => [{ 'foo3-1' => 'echo foo3' }] } }
       ],

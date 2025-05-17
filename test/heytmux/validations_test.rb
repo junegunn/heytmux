@@ -61,7 +61,7 @@ class HeytmuxValidationsTest < HeytmuxTestBase
 
   def test_validate_command
     [nil, [nil], '', 'foo',
-     ['foo', 'bar', 'expect' => 'pattern']].each do |spec|
+     ['foo', 'bar', { 'expect' => 'pattern' }]].each do |spec|
       assert_nil Heytmux::Validations.validate_commands(spec)
     end
     [[[]], ['not expected' => 'pattern']].each do |spec|
