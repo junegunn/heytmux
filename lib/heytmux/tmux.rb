@@ -23,7 +23,7 @@ module Heytmux
       list = tmux(%w[list-panes -s -F],
                   labels.map { |label| "\#{#{label}}" }.join(delimiter))
       list.each_line.map do |line|
-        Hash[labels.zip(line.chomp.split(delimiter))].tap do |h|
+        labels.zip(line.chomp.split(delimiter)).to_h.tap do |h|
           h[:window_index] = h[:window_index].to_i
           h[:pane_index] = h[:pane_index].to_i
         end

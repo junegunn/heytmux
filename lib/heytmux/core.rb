@@ -89,9 +89,8 @@ module Heytmux
   # Groups entities by the group key and extracts unique, sorted indexes and
   # returns stateful indexer that issues index number for the given group key
   def indexer(entities, group_key, index_key)
-    indexes =
-      Hash[entities.group_by { |e| e[group_key] }
-                   .map { |g, es| [g, es.map { |e| e[index_key] }.sort.uniq] }]
+    indexes = entities.group_by { |e| e[group_key] }
+                      .transform_values { |es| es.map { |e| e[index_key] }.sort.uniq }
     ->(group) { indexes.fetch(group, []).shift }
   end
   private_class_method :indexer
@@ -145,6 +144,12 @@ module Heytmux
   end
 
   def interpret_and_expand_pane_spec(pane, items, pane_indexer)
+    pane_items = pane[ITEMS_KEY]
+    if pane_items && pane.length > 1
+      pane = pane.except(ITEMS_KEY)
+      items = pane_items || items
+    end
+
     title, command = pane.is_a?(Hash) ? pane.first : [pane.tr("\n", ' '), pane]
     if title =~ ITEM_PAT || title =~ ITEM_INDEX_PAT
       items.map.with_index do |item, item_idx|

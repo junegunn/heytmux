@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class HeytmuxTmuxTest < HeytmuxTestBase
@@ -32,7 +34,7 @@ class HeytmuxTmuxTest < HeytmuxTestBase
     # Check if the window is created with the right name and title
     refute(prev_list.any? { |e| e[:window_index] == window_index })
     assert(Tmux.list.any? { |e| e[:window_index] == window_index })
-    assert_equal(opt + ' on',
+    assert_equal("#{opt} on",
                  Tmux.tmux(%w[show-window-options -t], window_index, opt))
     assert_retries("#{window_name}:#{pane_title1}") do
       query(window_index, base_index, '#{window_name}:#{pane_title}')
@@ -40,7 +42,7 @@ class HeytmuxTmuxTest < HeytmuxTestBase
 
     # Change window option
     Tmux.set_window_options(window_index, opt => false)
-    assert_equal(opt + ' off',
+    assert_equal("#{opt} off",
                  Tmux.tmux(%w[show-window-options -t], window_index, opt))
 
     # Split window

@@ -54,12 +54,32 @@ module Heytmux
       message = "Not a valid pane spec: #{pane_spec.inspect}"
       case pane_spec
       when Hash
+        # Is 'items' present?
+        has_items = pane_spec.key?(ITEMS_KEY)
+        if has_items && pane_spec.except(ITEMS_KEY).any?
+          items = pane_spec[ITEMS_KEY]
+          if !items.is_a?(Array) || items.empty?
+            raise ArgumentError, "'items' must be a non-empty array"
+          end
+
+          pane_spec = pane_spec.except(ITEMS_KEY)
+        end
+
         unless single_spec?(pane_spec)
           if unquoted_pane_title?(pane_spec)
             message = 'Invalid pane title. ' \
               'Make sure to quote pane titles that start with {{ item }}.'
           end
           raise ArgumentError, message
+        end
+
+        if has_items
+          title = pane_spec.first.first
+          unless title =~ ITEM_PAT || title =~ ITEM_INDEX_PAT
+            raise ArgumentError,
+                  'Pane title must contain {{ item }} or {{ item.index }} ' \
+                  "when 'items' is given"
+          end
         end
         validate_commands(pane_spec.first.last)
       else

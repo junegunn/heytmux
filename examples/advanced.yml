@@ -30,6 +30,11 @@ windows:
         - sleep {{item}}
         - pane {{item}}: echo {{item}}
 
+        # 'items' can be specified per pane
+        - pane {{item}}:
+            echo {{item}}
+          items: [8, 9]
+
       # Overrides common window options
       synchronize-panes: false
       pane-border-status: top

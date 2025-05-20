@@ -1,2 +1,12 @@
 Layout/LineLength:
   Max: 90
+Metrics/MethodLength:
+  Enabled: false
+Lint/InterpolationCheck:
+  Enabled: false
+Metrics/AbcSize:
+  Enabled: false
+Metrics/ModuleLength:
+  Enabled: false
+Metrics/ClassLength:
+  Enabled: false

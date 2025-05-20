@@ -23,7 +23,7 @@ strings = [ARGV.any? || $stdin.tty? ? nil : ['standard input', $stdin.read],
 specs = strings.map do |name, str|
   begin
     str = Heytmux.replace_env_vars(str)
-    YAML.respond_to?(:safe_load) ? YAML.safe_load(str) : YAML.load(str)
+    YAML.safe_load(str)
   rescue StandardError => e
     abort("Failed to parse #{name}: #{e}")
   end

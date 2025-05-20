@@ -25,7 +25,7 @@ module Heytmux
       def register(*labels, klass)
         instance = klass.new
         (@actions ||= {}).merge!(
-          Hash[labels.map { |label| [label, instance] }]
+          labels.to_h { |label| [label, instance] }
         )
       end
 
